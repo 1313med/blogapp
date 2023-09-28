@@ -1,5 +1,5 @@
 const express = require('express');
-/* const router = require('./routes/pages/router') */
+const router = require('./pages/home') 
 const app = express();
 const port = 8000
 app.set('view engine', 'ejs')
@@ -7,9 +7,7 @@ app.set('view engine', 'ejs')
 app.use(express.static("public"));
 
 
-app.get('/', (req,res)=>{
-    res.render('home')
-})
+app.use('/', router)
 
 app.get('/signin', (req, res) =>{
     res.render('signin')
@@ -18,7 +16,10 @@ app.get('/signin', (req, res) =>{
 app.get('/homepro', (req,res)=>{
     res.render('homepro')
 })
+app.get('/signup', (req,res)=>{
+    res.render('signup')
+})
 
 app.listen(port, ()=>{
-    console.log('server is running on port 8000')
+    console.log(`server is running on port http://localhost:${port}`)
 })
