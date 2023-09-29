@@ -13,7 +13,7 @@
     
     
   <div id="form-ui">
-    <form action="" method="post" id="form">
+    <form action="/signin" method="POST" id="form">
       <div id="form-body">
         <div id="welcome-lines">
           <div id="welcome-line-1">registration</div>
@@ -21,14 +21,15 @@
         </div>
         <div id="input-area">
           <div class="form-inp">
-            <input placeholder="Email Address" type="text">
+            <input placeholder="username"  name="username">
           </div>
           <div class="form-inp">
-            <input placeholder="Password" type="password">
+            <input placeholder="Password"  name="password">
           </div>
         </div>
         <div id="submit-button-cvr">
-            <a href="/homepro" id="submit-button">Login</a>
+            <!-- <a href="./home.ejs" id="submit-button">Login</a> -->
+            <button>logIn</button>
         </div>
         
         <div id="forgot-pass">

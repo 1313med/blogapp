@@ -14,11 +14,9 @@
     <nav>
         <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/signup">Sign Up</a></li>
-            <li><a href="/signin">Sign In</a></li>
-
-
-            
+            <li><a href="/signup">Logout</a></li>
+           
+            <li><a href="/create/posts">Create</a></li>
 
         </ul>
     </nav>
@@ -29,6 +27,18 @@
             <button>hello</button>
           </a>
           
+
+<ul class="article-ul">
+    <% data.forEach(post => { %>
+      <li>
+        <span><%= post.title %></span>
+        <span><%= post.content %></span>
+        <span ><%= post.createdAt.toDateString() %></span>
+      </li>
+    <% }) %>
+  </ul>
+  
+
         <p>This is the homepage of our website.</p>
     </main>
     

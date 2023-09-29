@@ -1,6 +1,8 @@
 const express = require('express');
 const homeRouter = require('./routes/home') 
 const authRouter = require('./routes/authRouter')
+const posts=require('./routes/BlogRoutes')
+const cookiesparser=require('cookie-parser')
 
 // connect to db :
 const connectDB=require('./config/db')
@@ -15,7 +17,8 @@ app.use(express.urlencoded( {extended:false} ));
 
 app.use('/', homeRouter)
 app.use('/', authRouter)
-
+app.use('/' , posts)
+app.use(cookiesparser())
 
 // ------- should be used in router
 
