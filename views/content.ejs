@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul>
+    <% data.forEach(c => { %>
+        <li>
+            <span><%= c.title %></span>
+          <span><%= c.content %></span>
+          <span ><%= c.createdAt.toDateString() %></span>
+        </li>
+        <a href="/editPost/<%= c._id %>" class="btn">Edit</a>
+      <% }) %>
+      
+    </ul>
+  
+</body>
+</html>

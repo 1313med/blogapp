@@ -2,10 +2,29 @@ const express=require('express')
 const router=express.Router()
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
-
-const post=require('../modles/posts')
+const cookieParser = require('cookie-parser');
+const Post=require('../modles/posts')
 // require users data 
+
 const User=require('../modles/users')
+router.use(cookieParser());
+
+const authMiddleware = (req, res, next ) => {
+  const token = req.cookies.token;
+
+  if(!token) {
+    return res.status(401).json( { message: 'Unauthorized'} );
+  }
+
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    req.userId = decoded.userId;
+    next();
+  } catch(error) {
+    res.status(401).json( { message: 'Unauthorized'} );
+  }
+}
+
 
 router.post('/signup' , async(req ,res)=>{
     try {
@@ -21,8 +40,8 @@ router.post('/signup' , async(req ,res)=>{
           console.log( 'user created',user);
         res.redirect('/signin')
     } catch (error) {
-        console.error('Error in route postRegister:', error); 
-        console.log('route postRegister : ',error);
+        // console.error('Error in route postRegister:', error); 
+        // console.log('route postRegister : ',error);
         res.send('something went wrong')
     }
 })
@@ -40,6 +59,8 @@ router.get('/signup', (req,res)=>{
 router.get('/signin', (req, res) =>{
     res.render('signin')
 })
+
+const secretKey = 'simoSecret'
 router.post('/signin', async (req, res) => {
     try {
       const { username, password } = req.body;
@@ -58,8 +79,11 @@ router.post('/signin', async (req, res) => {
   
       // If passwords match, redirect to the home page
       if (passwordMatch) {
-        const token = jwt.sign({ userId: user._id }, 'mouad' ) ;
-    res.cookie('token',token, {httpOnly:true});
+        // sign the jwt token to user
+        const token = jwt.sign({ userId: user._id }, secretKey ) ;
+        // store it to cookie
+        
+        res.cookie('token', token);
         return res.redirect('/displayBlog');
 
       }
@@ -71,6 +95,75 @@ router.post('/signin', async (req, res) => {
       res.send('Something went wrong');
     }
   });
+  
+
+
+
+
+router.get('/displayBlog',  authMiddleware, async (req, res) => {
+   try {
+     // Assuming you have defined the Post model for fetching data
+     const data = await Post.find();
+     res.render('homeAuth', { data });
+   } catch (error) {
+     // Handle any errors that occurred during data retrieval
+     res.status(500).json({ error: 'Internal server error' });
+   }
+ });
+
+
+
+
+// get contents (content route) another page
+
+ router.get('/content',  authMiddleware, async (req, res) => {
+  try {
+    // Assuming you have defined the Post model for fetching data
+    const data = await Post.find();
+    res.render('content', { data });
+  } catch (error) {
+    // Handle any errors that occurred during data retrieval
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+// edit post :
+
+router.get('/editPost/:id', authMiddleware, async (req, res) => {
+  try {
+
+    const data = await Post.findOne({ _id: req.params.id });
+
+    res.render('editPost', {
+    
+      data,
+      
+    })
+
+  } catch (error) {
+    console.log(error);
+  }
+
+});
+
+// update blog 
+router.put('/editPost/:id', authMiddleware, async (req, res) => {
+  try {
+
+    await Post.findByIdAndUpdate(req.params.id, {
+      title: req.body.title,
+      content: req.body.content,
+      updatedAt: Date.now()
+    });
+
+    res.redirect(`/editPost/${req.params.id}`);
+
+  } catch (error) {
+    console.log(error);
+  }
+
+});
 
 
 
