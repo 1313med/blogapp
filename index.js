@@ -15,11 +15,11 @@ app.set('view engine', 'ejs')
 // -- middlwares:
 app.use(express.static("public"));
 app.use(express.urlencoded( {extended:false} ));
-
+app.use(methodOverride('_method'));
 app.use('/', homeRouter)
 app.use('/', authRouter)
 app.use('/' , posts)
-app.use(methodOverride('_method'));
+
 
 // ------- should be used in router
 

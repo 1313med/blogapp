@@ -136,7 +136,6 @@ router.get('/editPost/:id', authMiddleware, async (req, res) => {
     const data = await Post.findOne({ _id: req.params.id });
 
     res.render('editPost', {
-    
       data,
       
     })
@@ -156,9 +155,21 @@ router.put('/editPost/:id', authMiddleware, async (req, res) => {
       content: req.body.content,
       updatedAt: Date.now()
     });
-
+// console.log('update' ,  )
     res.redirect(`/editPost/${req.params.id}`);
 
+  } catch (error) {
+    console.log(error);
+  }
+
+});
+
+// delete bolg : 
+router.delete('/delete-post/:id', authMiddleware, async (req, res) => {
+
+  try {
+    await Post.deleteOne( { _id: req.params.id } );
+    res.redirect('/displayBlog');
   } catch (error) {
     console.log(error);
   }
